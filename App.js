@@ -1,27 +1,33 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import {Input} from 'react-native-elements';
+import React, {useState } from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import axios from 'axios';
 import { SvgUri } from 'react-native-svg';
+import { Button } from 'react-native-web';
 
-const link = "https://cors-anywhere.herokuapp.com/https://api.hgbrasil.com/weather?key=96ec0872&city_name=Recife,PE";
+
 
 export default function App() {
   const [weatherInfo, setWeatherInfo] = useState('');
+  const [cidade, setCidade] = useState('');
+  const link = `https://cors-anywhere.herokuapp.com/https://api.hgbrasil.com/weather?key=12c8431d&city_name=${cidade}`;
 
-  useEffect(() => {    
+  const attPag = (() => {    
     axios.get(link)
     .then(response => setWeatherInfo(response.data))
     .catch(error => console.error('API Error', error));
-  }, []);
+  });
+
+
   
   const { results } = weatherInfo;
   const forecastDays = 8;
-
   return (
     <View style={styles.container}>
+      <Input style={{backgroundColor: "white"}}placeholder='Cidade' value={cidade} onChangeText={setCidade}></Input>
+      <Button onPress={attPag} title='Procurar'></Button>
       <StatusBar style="light" />
-      
       <View style={styles.header}> 
         <Text style={styles.city}>{results?.city}</Text>
         {results?.forecast.slice(0, 1).map((day, i) =>
